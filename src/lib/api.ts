@@ -2,6 +2,9 @@ export interface PokemonListResult {
   name: string;
   url: string;
 }
+export interface PokemonTypeResponse {
+  results: { name: string; url: string }[];
+}
 
 export interface PokemonListResponse {
   count: number;
@@ -48,6 +51,24 @@ export async function getPokemonDetail(
   const res = await fetch(`${BASE_URL}/pokemon/${id}`);
   if (!res.ok) {
     throw new Error(`Failed to fetch Pokémon details`);
+  }
+  return res.json();
+}
+
+
+
+export async function getPokemonTypes(): Promise<PokemonTypeResponse> {
+  const res = await fetch(`${BASE_URL}/type`);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch Pokémon types`);
+  }
+  return res.json();
+}
+
+export async function getPokemonByType(type: string) {
+  const res = await fetch(`${BASE_URL}/type/${type}`);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch Pokémon by type`);
   }
   return res.json();
 }
