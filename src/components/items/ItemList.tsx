@@ -3,39 +3,56 @@
 import { useEffect, useState } from "react";
 import { getPokemonList, PokemonListResponse } from "@/lib/api";
 import ItemCard from "./ItemCard";
+import Pagination from "../pagination/Pagination";
+
 
 export default function ItemList() {
   const [data, setData] = useState<PokemonListResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
 
+  const limit = 20;
   useEffect(() => {
     async function fetchData() {
       try {
         setLoading(true);
-        setError(null); 
-        const res = await getPokemonList(20, 0);
+        const offset = (page - 1) * limit;
+        const res = await getPokemonList(limit, offset);
         setData(res);
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load Pokémon list. Please try again.");
+      } catch (error) {
+        console.error(error);
       } finally {
         setLoading(false);
       }
     }
-
     fetchData();
-  }, []);
-
-  if (loading) return <p>Loading...</p>;
+  }, [page]);
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      {data?.results.map((pokemon) => {
-        const id = pokemon.url.split("/").filter(Boolean).pop();
-        return <ItemCard key={pokemon.name} id={id!} name={pokemon.name} />;
-        
-      })}
+    <div>
+      {loading && <p>Loading...</p>}
+
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        {data?.results.map((pokemon) => {
+          const id = pokemon.url.split("/").filter(Boolean).pop();
+          return (
+            <ItemCard
+              key={pokemon.name}
+              id={id!}
+              name={pokemon.name}
+            />
+          );
+        })}
+      </div>
+
+      {data && (
+        <Pagination
+          currentPage={page}
+          totalItems={data.count}
+          itemsPerPage={limit}
+          onPageChange={setPage}
+        />
+      )}
     </div>
   );
 }
