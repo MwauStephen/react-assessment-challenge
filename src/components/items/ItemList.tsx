@@ -7,6 +7,7 @@ import Pagination from "../pagination/Pagination";
 import SearchFilterSort from "../filter/SearchFilterSort";
 import { useSearchParams } from "next/navigation";
 import { applySearchAndSort } from "@/lib/utils";
+import { useFavorites } from "@/hooks/useFavorites";
 
 interface PokemonTypeResponse {
   pokemon: {
@@ -16,6 +17,7 @@ interface PokemonTypeResponse {
     };
   }[];
 }
+
 export default function ItemList() {
   const [data, setData] = useState<{ name: string; url: string }[]>([]);
   const [count, setCount] = useState(0);
@@ -26,7 +28,9 @@ export default function ItemList() {
   const q = searchParams.get("q")?.toLowerCase() || "";
   const type = searchParams.get("type") || "";
   const sort = searchParams.get("sort") || "name_asc";
+  const favoritesOnly = searchParams.get("favorites") === "true";
 
+  const { favorites } = useFavorites();
   const limit = 20;
 
   useEffect(() => {
@@ -46,13 +50,21 @@ export default function ItemList() {
           setCount(res.count);
         }
 
+        // Filter favorites if active
+        if (favoritesOnly) {
+          results = results.filter((p) => {
+            const id = p.url.split("/").filter(Boolean).pop();
+            return favorites.has(String(id));
+          });
+        }
+
         // Apply search + sort
         const processed = applySearchAndSort(results, q, sort);
 
-        // For type filter, update count after filtering
-        if (type) setCount(processed.length);
+        // Update count after filtering
+        setCount(processed.length);
 
-        // Paginate locally 
+        // Paginate locally
         const paginated = processed.slice((page - 1) * limit, page * limit);
 
         setData(paginated);
@@ -64,7 +76,7 @@ export default function ItemList() {
     }
 
     fetchData();
-  }, [page, q, type, sort]);
+  }, [page, q, type, sort, favoritesOnly, favorites]);
 
   return (
     <div>
