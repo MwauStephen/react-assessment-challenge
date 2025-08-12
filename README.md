@@ -4,7 +4,14 @@ A Pokemon resource explorer application built with Next.js and TypeScript.
 
 ## Getting Started
 
-First, install the dependencies:
+First, clone the repository:
+
+```bash
+git clone git@github.com:MwauStephen/react-assessment-challenge.git
+cd react-assessment-challenge
+```
+
+Then, install the dependencies:
 
 ```bash
 npm install
@@ -12,7 +19,7 @@ npm install
 yarn install
 ```
 
-Then, run the development server:
+Finally, run the development server:
 
 ```bash
 npm run dev
