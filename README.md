@@ -102,7 +102,7 @@ src/
 - **components/pagination/**
   - `Pagination.tsx`: Page navigation
 
-## Development Approach & Trade-offs
+# Development Approach & Trade-offs
 
 ### Core Priorities
 - **URL-Driven State Management**
