@@ -66,12 +66,12 @@ export default function Pagination({
 
       {pages.map((page, idx) =>
         typeof page === "string" ? (
-          <span key={idx} className="px-3 py-1">
+          <span key={`ellipsis-${idx}`} className="px-3 py-1">
             {page}
           </span>
         ) : (
           <button
-            key={page}
+            key={`page-${page}`}
             onClick={() => onPageChange(page)}
             className={`px-3 py-1 rounded ${currentPage === page
                 ? "bg-red-500 text-white"
@@ -82,6 +82,7 @@ export default function Pagination({
           </button>
         )
       )}
+
 
       <button
         onClick={() => onPageChange(currentPage + 1)}
