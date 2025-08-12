@@ -5,7 +5,7 @@ import { getPokemonList, getPokemonByType } from "@/lib/api";
 import ItemCard from "./ItemCard";
 import Pagination from "../pagination/Pagination";
 import SearchFilterSort from "../filter/SearchFilterSort";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { applySearchAndSort } from "@/lib/utils";
 import { useFavorites } from "@/hooks/useFavorites";
 
@@ -33,6 +33,8 @@ export default function ItemList() {
 
   const { favorites } = useFavorites();
   const limit = 20;
+  const router = useRouter();
+  const pathname = usePathname();
 
   const fetchData = (signal: AbortSignal) => {
     return new Promise<void>(async (resolve, reject) => {
@@ -118,17 +120,32 @@ export default function ItemList() {
         </div>
       )}
 
-      {/* Skeletons or real data */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {loading
-          ? Array.from({ length: limit }).map((_, idx) => (
+        {loading &&
+          Array.from({ length: limit }).map((_, idx) => (
             <ItemCardSkeleton key={idx} />
-          ))
-          : data.map((pokemon) => {
+          ))}
+
+        {!loading && data.length > 0 &&
+          data.map((pokemon) => {
             const id = pokemon.url.split("/").filter(Boolean).pop();
             return <ItemCard key={pokemon.name} id={id!} name={pokemon.name} />;
           })}
       </div>
+
+      {/* Empty state */}
+      {!loading && !error && data.length === 0 && (
+        <div className="col-span-full text-center my-10">
+          <p className="text-gray-500 mb-4">No Pokémon match your search or filters.</p>
+          <button
+            onClick={() => router.push(pathname)} 
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            Reset Filters
+          </button>
+        </div>
+      )}
+
 
       {/* Pagination */}
       {!loading && count > 0 && (
