@@ -33,7 +33,7 @@ export default function ItemDetail() {
         if (savedNotes[id as string]) {
           setNote(savedNotes[id as string]);
         }
-      } catch (err) {
+      } catch {
         setError("Failed to fetch Pokémon details");
       } finally {
         setLoading(false);
@@ -102,10 +102,12 @@ export default function ItemDetail() {
       </h1>
 
       <div className="flex justify-center mb-4">
-        <img
+        <Image
+          width={500}
+          height={500}
           src={pokemon.sprites.other["official-artwork"].front_default}
           alt={pokemon.name}
-          className="h-48 w-48 object-contain"
+          className="h-64 w-64 object-contain"
         />
       </div>
 
