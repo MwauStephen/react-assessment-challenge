@@ -1,36 +1,151 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Resource Explorer
+
+A Pokemon resource explorer application built with Next.js and TypeScript.
 
 ## Getting Started
 
-First, run the development server:
+First, install the dependencies:
+
+```bash
+npm install
+# or
+yarn install
+```
+
+Then, run the development server:
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Browse Pokemon with pagination support
+- View detailed Pokemon information
+- Filter Pokemon by type
+- Search functionality:
+  - Search by Pokémon name
+  - Filter by Pokémon type
+  - Sort by name or ID (ascending/descending)
+- Favorites system:
+  - Toggle favorites (persisted in localStorage)
+  - Filter to show favorites only
+- Enhanced user experience:
+  - Loading skeletons for smooth transitions
+  - Error states with retry functionality
+  - Empty state indicators
+  - Request cancellation on filter changes
+  - Optimistic UI updates for favorite toggling
 
-## Learn More
+# Application Architecture
 
-To learn more about Next.js, take a look at the following resources:
+### Core Architecture
+- **Framework**: Next.js 13+ with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Data Source**: PokeAPI
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Directory Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The project is organized into the following directories:
 
-## Deploy on Vercel
+```
+src/
+├── app/                 # Next.js
+├── components/          # React Components
+├── hooks/              # Custom React Hooks
+├── lib/                # Utilities and API
+└── types/              # TypeScript type definitions
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Application Layers
+
+#### 1. Data Layer
+- **api.ts**
+  - Central API client
+  - Type-safe Pokemon API interfaces
+  - RESTful endpoints for Pokemon data
+
+#### 2. State Management
+- **useFavorites.ts**
+  - Custom hook for favorites management
+  - LocalStorage persistence
+  - Optimistic UI updates
+
+#### 3. UI Components
+
+##### Layout Components
+- **layout.tsx**: Root layout with navigation
+- **page.tsx**: Main entry point
+
+##### Feature Components
+- **components/items/**
+  - `ItemList.tsx`: Main Pokemon grid with filtering
+  - `ItemCard.tsx`: Individual Pokemon card
+  - `ItemDetail.tsx`: Detailed Pokemon view
+
+##### UI Controls
+- **components/filter/**
+  - `SearchFilterSort.tsx`: Search, filter, and sort controls
+- **components/pagination/**
+  - `Pagination.tsx`: Page navigation
+
+## Development Approach & Trade-offs
+
+### Core Priorities
+- **URL-Driven State Management**
+  - Search parameters
+  - Filter selections
+  - Sort preferences
+  - Pagination state
+
+- **Performance & UX**
+  - AbortController for request cancellation
+  - Loading skeleton states
+  - Empty state handling
+  - Error retry mechanism
+
+### Technical Trade-offs
+
+#### 1. Navigation Experience
+- Scroll position restoration
+  - Currently resets to top on back/forward navigation
+  - Could be improved with sessionStorage implementation
+
+#### 2. Data Management
+- Client-side caching
+  - No persistent data cache
+  - Potential for unnecessary refetching
+
+## Future Improvements
+
+1. **Navigation Enhancement**
+   - Implement scroll position restoration
+   - Add navigation progress indicators
+
+2. **Data Management**
+   - Implement React Query for caching
+   - Add background data refresh
+   - Optimize request patterns
+
+3. **User Experience**
+   - Add theme toggle (light/dark)
+   - Improve favorite toggle animations
+   - Enhanced loading states
+
+### Performance Optimizations
+- Implement virtualization for large lists
+- Add image lazy loading
+- Optimize bundle size
+
+### Testing & Quality
+- Add E2E tests with Playwright
+- Implement unit tests for core functions
+- Add accessibility testing
+
+
