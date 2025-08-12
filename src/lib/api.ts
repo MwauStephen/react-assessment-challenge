@@ -27,7 +27,7 @@ export interface PokemonDetailResponse {
   types: { slot: number; type: { name: string } }[];
   abilities: { ability: { name: string } }[];
   stats: { base_stat: number; stat: { name: string } }[];
-  base_experience:number
+  base_experience: number;
 }
 
 const BASE_URL = "https://pokeapi.co/api/v2";
@@ -35,38 +35,40 @@ const BASE_URL = "https://pokeapi.co/api/v2";
 
 export async function getPokemonList(
   limit = 20,
-  offset = 0
+  offset = 0,
+  signal?: AbortSignal
 ): Promise<PokemonListResponse> {
-  const res = await fetch(`${BASE_URL}/pokemon?limit=${limit}&offset=${offset}`);
+  const res = await fetch(
+    `${BASE_URL}/pokemon?limit=${limit}&offset=${offset}`,
+    { signal }
+  );
   if (!res.ok) {
     throw new Error(`Failed to fetch Pokémon list`);
   }
   return res.json();
 }
 
-
 export async function getPokemonDetail(
-  id: string | number
+  id: string | number,
+  signal?: AbortSignal
 ): Promise<PokemonDetailResponse> {
-  const res = await fetch(`${BASE_URL}/pokemon/${id}`);
+  const res = await fetch(`${BASE_URL}/pokemon/${id}`, { signal });
   if (!res.ok) {
     throw new Error(`Failed to fetch Pokémon details`);
   }
   return res.json();
 }
 
-
-
-export async function getPokemonTypes(): Promise<PokemonTypeResponse> {
-  const res = await fetch(`${BASE_URL}/type`);
+export async function getPokemonTypes(signal?: AbortSignal): Promise<PokemonTypeResponse> {
+  const res = await fetch(`${BASE_URL}/type`, { signal });
   if (!res.ok) {
     throw new Error(`Failed to fetch Pokémon types`);
   }
   return res.json();
 }
 
-export async function getPokemonByType(type: string) {
-  const res = await fetch(`${BASE_URL}/type/${type}`);
+export async function getPokemonByType(type: string, signal?: AbortSignal) {
+  const res = await fetch(`${BASE_URL}/type/${type}`, { signal });
   if (!res.ok) {
     throw new Error(`Failed to fetch Pokémon by type`);
   }
