@@ -35,9 +35,9 @@ export default function RootLayout({
               <Link href="/" className="hover:underline">
                 Home
               </Link>
-              <Link href="/favorites" className="hover:underline">
+              {/* <Link href="/favorites" className="hover:underline">
                 Favorites
-              </Link>
+              </Link> */}
             </nav>
           </div>
         </header>
